@@ -1,0 +1,33 @@
+{
+  "name": "backend_py_integrador_udi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Valerieee01/BACKEND_PY_INTEGRADOR_UDI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Valerieee01/BACKEND_PY_INTEGRADOR_UDI/issues"
+  },
+  "homepage": "https://github.com/Valerieee01/BACKEND_PY_INTEGRADOR_UDI#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+"json-server": "^0.17.4",
+    "mysql2": "^3.15.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+
+  }
+}
