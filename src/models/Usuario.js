@@ -121,7 +121,7 @@ class Usuario {
         }
     }
   // Actualizar el refresh token de un usuario
-  async updateRefreshToken(id_usuario, refreshToken) {
+  static async updateRefreshToken(id_usuario, refreshToken) {
     try {
       await connection.query("UPDATE usuarios SET refresh_token = ? WHERE id_usuario = ?", [
         refreshToken,

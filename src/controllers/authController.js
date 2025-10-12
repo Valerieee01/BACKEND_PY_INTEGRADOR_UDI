@@ -56,6 +56,7 @@ export const logout = async (req, res) => {
     ResponseProvider.success(res, {}, response.message, response.code);
     return res.status(response.code).json(response);
   } catch (error) {
+    console.log(error)
     ResponseProvider.error(res, "Error en el servidor", 500);
   }
 }

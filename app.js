@@ -4,6 +4,10 @@ import cors from "cors";// para trabajar fuera del dominio
 import bodyParser from "body-parser"; //parsear de lo que recibire en la informacion
 import cookieParser from "cookie-parser"; // autenticacion para enviar una cookie
 
+import authRoutes from "./src/routes/authRoutes.js";
+import administradorRoutes from "./src/routes/administradorRoutes.js";
+import usuariosRoutes from "./src/routes/usuariosRoutes.js";
+
 dotenv.config();
 
 // Crear la instancia de Express
@@ -19,7 +23,13 @@ app.use(express.urlencoded({ extended: true }));
 // Permite manejar cookies en las respuestas.
 app.use(cookieParser());
 
-// Rutas
+// Rutas navegación
+app.use("/api/user", usuariosRoutes);
+
+
+//rutas autenticación
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", administradorRoutes);
 
 
 // Puerto para ejecutar el servidor
