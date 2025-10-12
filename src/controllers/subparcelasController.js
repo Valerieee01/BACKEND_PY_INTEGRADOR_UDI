@@ -1,14 +1,14 @@
 import { ResponseProvider } from "../providers/ResponseProvider.js";
-import conglomeradoService from "../services/conglomeradosService.js";
+import subparcelasService from "../services/subparcelasService.js";
 
-class ConglomeradosController {
+class SubparcelasController {
 
-  // Obtener todos los Conglomerados
-  static getAllConglomerados = async (req, res) => {    
+  // Obtener todos los Subparcelas
+  static getAllSubparcelas = async (req, res) => {    
     try {
-      // Llamamos al servicio para obtener las Conglomerados
-      const response = await Conglomeradoservice.getConglomerados();   
-      // Validamos si no hay Conglomerados
+      // Llamamos al servicio para obtener las Subparcelas
+      const response = await Subparcelaservice.getSubparcelas();   
+      // Validamos si no hay Subparcelas
       if (response.error) {        
         // Llamamos el conglomerado para centralizar los mensajes de respuesta
         return ResponseProvider.error(
@@ -32,11 +32,11 @@ class ConglomeradosController {
   };
 
   // Obtener una categoría por su ID
-  static getConglomeradosById = async (req, res) => {
+  static getSubparcelasById = async (req, res) => {
     const { id } = req.params;
     try {
       // Llamamos al servicio para obtener la categoría por su ID
-      const response = await Conglomeradoservice.getConglomeradosById(id);
+      const response = await Subparcelaservice.getSubparcelasById(id);
       if (response.error) {
         // Llamamos el conglomerado para centralizar los mensajes de respuesta
         return ResponseProvider.error(
@@ -60,4 +60,4 @@ class ConglomeradosController {
   };
 
 }
-export default ConglomeradosController;
+export default SubparcelasController;

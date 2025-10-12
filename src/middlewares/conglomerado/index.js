@@ -1,2 +1,2 @@
-export * from "./camposCliente.js";
-export * from "./parcialesCliente.js";
+export * from "./camposConglomerado.js";
+export * from "./parcialesConglomerado.js";
