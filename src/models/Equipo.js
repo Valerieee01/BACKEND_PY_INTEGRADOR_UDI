@@ -1,72 +1,57 @@
 import connection from "../utils/db.js";
 
-class Cliente {
+class Equipo {
 
   async getAll() {
     try {
-      const [rows] = await connection.query("SELECT  p.id_persona, p.nombre_completo_razon_social, ti.tipo, p.numero_identificacion, p.correo, p.estado, p.telefono"
-        + " FROM personas p JOIN clientes c ON c.id_cliente = p.id_persona "
-      + "JOIN tipos_identificacion ti ON ti.id_tipo_identificacion = p.id_tipo_identificacion");
+      const [rows] = await connection.query("SELECT * FROM Equipos");
       return rows;
     } catch (error) {
       console.log(error);
 
-      throw new Error("Error al obtener las clientes");
+      throw new Error("Error al obtener los Equipos");
     }
   }
-  // Método para buscar un cliente por id
 
+  // Método para buscar un equipo por id
   async getById(id) {
     try {
       const [rows] = await connection.query(
-        "SELECT p.id_persona, p.nombre_completo_razon_social, p.id_tipo_identificacion, p.numero_identificacion, p.correo, p.telefono, p.estado " +
-        "FROM personas p JOIN clientes c ON c.id_cliente = p.id_persona " +
-        "WHERE c.id_cliente = ?",
+        "SELECT nombre_equipo, institucion, estado, observaciones, fecha_creacion FROM Equipos WHERE id_equipo = ?",
         [id]
       );
       if (rows.length === 0) {
-        return []; // retornar un array vacío si prefieres que la ausencia de resultados sea un array vacío
+        return []; // retornar un array vacío 
       }
-      return rows[0]; // Retorna el primer (y único) resultado encontrado, asumiendo que id_cliente es único
+      return rows[0]; // Retorna el primer (y único) resultado encontrado, asumiendo que id_equipo es único
     } catch (error) {
-      console.error("Error al obtener el cliente por ID:", error); // Usa console.error para errores
-      throw new Error("Error al obtener el cliente.");
+      console.error("Error al obtener el equipo por ID:", error); 
+      throw new Error("Error al obtener el equipo.");
     }
   }
 
-  // Método para crear  un cliente
-  async create(id_persona) {
+  // Método para crear  un equipo
+  async create(nombre_equipo, institucion,estado,observaciones) {
     try {
 
-
-      // Verificar si la persona ya es un cliente
-      const [existingClient] = await connection.query(
-        "SELECT id_cliente FROM clientes WHERE id_cliente = ?",
-        [id_persona]
-      );
-
-      if (existingClient.length > 0) {
-        throw new Error("La persona ya es un cliente.");
-      }
-
       const [result] = await connection.query(
-        "INSERT INTO clientes (id_cliente) VALUES (?)",
-        [id_persona]
+        "INSERT INTO equipos (nombre_equipo, institucion, estado, observaciones) VALUES (?,?,?,?)",
+        [nombre_equipo, institucion,estado, observaciones]
       );
       if (result.affectedRows === 0) {
-        return null; // Retorna null si no se pudo crear EL cliente
+        return null; // Retorna null si no se pudo crear EL equipo
       }
-      // Retorna el nueva cliente creado
-      return { id: result.insertId, id_persona };
+      // Retorna el nueva equipo creado
+      return { id: result.insertId, nombre_equipo,  };
     } catch (error) {
       console.log(error);
-      throw new Error("Error al crear la cliente");
+      throw new Error("Error al crear la equipo");
     }
   }
 
   async update(id, campos) {
     try {
-      let query = "UPDATE clientes SET ";
+      let query = "UPDATE equipos SET ";
       let params = [];
 
       // Construimos dinámicamente la consulta de actualización solo con los campos proporcionados
@@ -78,37 +63,37 @@ class Cliente {
       // Eliminamos la última coma y espacio de la consulta
       query = query.slice(0, -2);
 
-      // Añadimos la condición WHERE para seleccionar el cliente por su ID
-      query += " WHERE id = ?";
+      // Añadimos la condición WHERE para seleccionar el equipo por su ID
+      query += " WHERE id_equipo = ?";
       params.push(id);
       const [result] = await connection.query(query, params);
       return result.affectedRows > 0 ? { id, ...campos } : null;
     } catch (error) {
-      throw new Error("Error al actualizar la cliente");
+      throw new Error("Error al actualizar la equipo");
     }
   }
 
-  // Método para eliminar una cliente
-  async delete(id_cliente) {
+  // Método para eliminar una equipo
+  async delete(id_equipo) {
     const [result] = await connection.query(
-      "DELETE FROM clientes WHERE id_cliente = ?",
-      [id_cliente]
+      "DELETE FROM equipos WHERE id_equipo = ?",
+      [id_equipo]
     );
 
     if (result.affectedRows === 0) {
       return {
         error: true,
-        mensaje: "No se pudo eliminar el cliente, ocurrio un error inesperado.",
+        mensaje: "No se pudo eliminar el equipo, ocurrio un error inesperado.",
       };
 
     }
 
     return {
       error: false,
-      mensaje: "Cliente eliminado exitosamente.",
+      mensaje: "equipo eliminado exitosamente.",
     };
   }
 
 }
 
-export default Cliente;
+export default Equipo;

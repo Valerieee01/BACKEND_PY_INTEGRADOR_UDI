@@ -1,72 +1,59 @@
 import connection from "../utils/db.js";
 
-class Cliente {
+class Individuo {
 
   async getAll() {
     try {
-      const [rows] = await connection.query("SELECT  p.id_persona, p.nombre_completo_razon_social, ti.tipo, p.numero_identificacion, p.correo, p.estado, p.telefono"
-        + " FROM personas p JOIN clientes c ON c.id_cliente = p.id_persona "
-      + "JOIN tipos_identificacion ti ON ti.id_tipo_identificacion = p.id_tipo_identificacion");
+      const [rows] = await connection.query("SELECT * FROM individuo");
       return rows;
     } catch (error) {
       console.log(error);
 
-      throw new Error("Error al obtener las clientes");
+      throw new Error("Error al obtener las individuos");
     }
   }
-  // Método para buscar un cliente por id
 
+  // Método para buscar un individuo por id
   async getById(id) {
     try {
       const [rows] = await connection.query(
-        "SELECT p.id_persona, p.nombre_completo_razon_social, p.id_tipo_identificacion, p.numero_identificacion, p.correo, p.telefono, p.estado " +
-        "FROM personas p JOIN clientes c ON c.id_cliente = p.id_persona " +
-        "WHERE c.id_cliente = ?",
+        "SELECT id_muestreo_botanico, numero, especie, dap, altura_total, azimut, distancia, estado, categoria_dap, observaciones"+
+        "WHERE c.id_individuo = ?",
         [id]
       );
       if (rows.length === 0) {
-        return []; // retornar un array vacío si prefieres que la ausencia de resultados sea un array vacío
+        return []; // retornar un array vacío 
       }
-      return rows[0]; // Retorna el primer (y único) resultado encontrado, asumiendo que id_cliente es único
+      return rows[0]; // Retorna el primer (y único) resultado encontrado, asumiendo que id_individuo es único
     } catch (error) {
-      console.error("Error al obtener el cliente por ID:", error); // Usa console.error para errores
-      throw new Error("Error al obtener el cliente.");
+      console.error("Error al obtener el individuo por ID:", error); 
+      throw new Error("Error al obtener el individuo.");
     }
   }
 
-  // Método para crear  un cliente
-  async create(id_persona) {
+  // Método para crear  un individuo
+  async create(id_muestreo_botanico, numero, especie, dap, altura_total, azimut, distancia, estado, categoria_dap, observaciones) {
     try {
 
-
-      // Verificar si la persona ya es un cliente
-      const [existingClient] = await connection.query(
-        "SELECT id_cliente FROM clientes WHERE id_cliente = ?",
-        [id_persona]
-      );
-
-      if (existingClient.length > 0) {
-        throw new Error("La persona ya es un cliente.");
-      }
-
       const [result] = await connection.query(
-        "INSERT INTO clientes (id_cliente) VALUES (?)",
-        [id_persona]
+        "INSERT INTO individuos (id_muestreo_botanico, numero, especie, dap, altura_total, azimut, distancia, estado, categoria_dap, observaciones)"
+       + " VALUES (?,?,?,?,?,?,?,?,?,?)",
+        [id_muestreo_botanico, numero, especie, dap, altura_total, azimut, distancia, estado, categoria_dap, observaciones]
       );
       if (result.affectedRows === 0) {
-        return null; // Retorna null si no se pudo crear EL cliente
+        return null; // Retorna null si no se pudo crear EL individuo
       }
-      // Retorna el nueva cliente creado
+      // Retorna el nueva individuo creado
       return { id: result.insertId, id_persona };
     } catch (error) {
       console.log(error);
-      throw new Error("Error al crear la cliente");
+      throw new Error("Error al crear la individuo");
     }
   }
 
   async update(id, campos) {
     try {
-      let query = "UPDATE clientes SET ";
+      let query = "UPDATE individuos SET ";
       let params = [];
 
       // Construimos dinámicamente la consulta de actualización solo con los campos proporcionados
@@ -78,37 +65,37 @@ class Cliente {
       // Eliminamos la última coma y espacio de la consulta
       query = query.slice(0, -2);
 
-      // Añadimos la condición WHERE para seleccionar el cliente por su ID
-      query += " WHERE id = ?";
+      // Añadimos la condición WHERE para seleccionar el individuo por su ID
+      query += " WHERE id_individuo = ?";
       params.push(id);
       const [result] = await connection.query(query, params);
       return result.affectedRows > 0 ? { id, ...campos } : null;
     } catch (error) {
-      throw new Error("Error al actualizar la cliente");
+      throw new Error("Error al actualizar los individuo");
     }
   }
 
-  // Método para eliminar una cliente
-  async delete(id_cliente) {
+  // Método para eliminar una individuo
+  async delete(id_individuo) {
     const [result] = await connection.query(
-      "DELETE FROM clientes WHERE id_cliente = ?",
-      [id_cliente]
+      "DELETE FROM individuos WHERE id_individuo = ?",
+      [id_individuo]
     );
 
     if (result.affectedRows === 0) {
       return {
         error: true,
-        mensaje: "No se pudo eliminar el cliente, ocurrio un error inesperado.",
+        mensaje: "No se pudo eliminar el individuo, ocurrio un error inesperado.",
       };
 
     }
 
     return {
       error: false,
-      mensaje: "Cliente eliminado exitosamente.",
+      mensaje: "individuo eliminado exitosamente.",
     };
   }
 
 }
 
-export default Cliente;
+export default Individuo;

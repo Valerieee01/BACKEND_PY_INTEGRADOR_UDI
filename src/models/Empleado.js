@@ -1,6 +1,6 @@
 import connection from "../utils/db.js";
 
-class Cliente {
+class Empleado {
 
   async getAll() {
     try {
@@ -36,40 +36,19 @@ class Cliente {
   }
 
   // Método para crear una nueva categoría
-  async create(id_persona) {
+  async create(id_empleado, id_cargo_empleado) {
     try {
-
-      // Verificar si la persona ya existe
-      const [existingPersona] = await connection.query(
-        "SELECT id_persona FROM personas WHERE id_persona = ?",
-        [id_persona]
-      );
-
-      if (existingPersona.length === 0) {
-        throw new Error("La persona con el ID proporcionado no existe.");
-      }
-
-      // Verificar si la persona ya es un cliente
-      const [existingEmpleado] = await connection.query(
-        "SELECT id_empleado FROM empleados WHERE id_empleado = ?",
-        [id_persona]
-      );
-
-      if (existingEmpleado.length > 0) {
-        throw new Error("La persona ya es un empleado.");
-        
-      }
 
 
       const [result] = await connection.query(
-        "INSERT INTO empleados (id_empleado) VALUES (?)",
-        [id_persona]
+        "INSERT INTO empleados (id_empleado, id_cargo_empleado) VALUES (?,?)",
+        [id_empleado, id_cargo_empleado]
       );
       if (result.affectedRows === 0) {
         return null; // Retorna null si no se pudo crear la empleado
       }
       // Retorna la nueva empleado creado
-      return { id: result.insertId, id_persona };
+      return { id: result.insertId, id_empleado };
     } catch (error) {
       console.log(error);
 
@@ -92,7 +71,7 @@ class Cliente {
       query = query.slice(0, -2);
 
       // Añadimos la condición WHERE para seleccionar el producto por su ID
-      query += " WHERE id = ?";
+      query += " WHERE id_empleado = ?";
       params.push(id);
       const [result] = await connection.query(query, params);
       return result.affectedRows > 0 ? { id, ...campos } : null;
@@ -124,4 +103,4 @@ class Cliente {
 
 }
 
-export default Cliente;
+export default Empleado;

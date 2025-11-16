@@ -1,12 +1,12 @@
 import connection from "../utils/db.js";
 
-class MuestreoSuelo {
+class MuestreoDetritosMadera {
     
     async getAll() {
         try {
-            const [rows] = await connection.query("SELECT sp.numero_subparcela, ms.profundidad_inicial, ms.profundidad_final," +               
-                "ms.textura, ms.color_munsell, ms.humedad, ms.tipo_muestra, ms.observaciones FROM muestreo_suelo ms" +
-               "JOIN subparcela sp ON sp.id_subparcela = ms.id_subparcela");
+            const [rows] = await connection.query("SELECT sp.numero_subparcela, dm.tipo_elemento, dm.diametro, dm.longitud, "+
+              " dm.estado_descomposicion, dm.posicion, dm.observaciones FROM muestreo_detritos_madera dm" +
+               "JOIN subparcela sp ON sp.id_subparcela = dm.id_subparcela");
             return rows; 
         } catch (error) {
             throw new Error("Error al obtener las categorías");
@@ -15,9 +15,10 @@ class MuestreoSuelo {
     
     async getById(id) {
       try {
-        const [rows] = await connection.query( "SELECT sp.numero_subparcela, mb.fecha_muestreo, mb.observaciones FROM muestreo_botanico mb" +
-               "JOIN subparcela sp ON sp.id_subparcela = mb.id_subparcela" +
-               "WHERE mb.id_muestreo_botanico = ? ",[id]);
+        const [rows] = await connection.query( "SELECT sp.numero_subparcela, dm.tipo_elemento, dm.diametro, dm.longitud, "+
+              " dm.estado_descomposicion, dm.posicion, dm.observaciones FROM muestreo_detritos_madera dm" +
+               "JOIN subparcela sp ON sp.id_subparcela = dm.id_subparcela" +
+               "WHERE dm.id_muestreo_detritos = ? ",[id]);
         console.log(rows);
         
         if (rows.length === 0) {
@@ -25,34 +26,33 @@ class MuestreoSuelo {
         }
         return rows[0];
       } catch (error) {
-                  throw new Error("Error al obtener el muestreo botanico");
+                  throw new Error("Error al obtener el Muestreo de Detritos de madera");
         }
     }
 
     // Método para crear una nueva categoría
-  async create(id_subparcela, profundidad_inicial, profundidad_final, textura, color_munsell, humedad, tipo_muestra, observaciones) {
+  async create(id_subparcela, fecha_muestreo, observaciones) {
     
     try {
       const [result] = await connection.query(
-        "INSERT INTO muestreo_suelo (id_subparcela, profundidad_inicial, profundidad_final, textura, color_munsell, humedad," +
-        "tipo_muestra, observaciones) VALUES (?,?,?,?,?,?,?,?)",
-        [id_subparcela, profundidad_inicial, profundidad_final, textura, color_munsell, humedad, tipo_muestra, observaciones]
+        "INSERT INTO muestreo_botanico (id_subparcela, fecha_muestreo, observaciones) VALUES (?, ?, ?)",
+        [id_subparcela, fecha_muestreo, observaciones]
       );
       if (result.affectedRows === 0) {
         return null; // Retorna null si no se pudo crear la persona
       }
       // Retorna la nueva persona creada
-      return { id: result.insertId, id_subparcela, profundidad_inicial, profundidad_final, textura, color_munsell, humedad, tipo_muestra, observaciones};
+      return { id: result.insertId, id_subparcela, fecha_muestreo, observaciones};
 
     } catch (error) {
       console.log(error);
-      throw new Error("Error al crear el muestreo de suelo");
+      throw new Error("Error al crear el Muestreo de Detritos de madera");
     }
   }
 
    async update(id, campos) {
     try {
-      let query = "UPDATE muestreo_suelo SET ";
+      let query = "UPDATE muestreo_detritos_madera SET ";
       let params = [];
 
       // Construimos dinámicamente la consulta de actualización solo con los campos proporcionados
@@ -65,12 +65,12 @@ class MuestreoSuelo {
       query = query.slice(0, -2);
 
       // Añadimos la condición WHERE para seleccionar el producto por su ID
-      query += " WHERE id_muestreo_suelo = ?";
+      query += " WHERE id_muestreo_detritos = ?";
       params.push(id);
       const [result] = await connection.query(query, params);
       return result.affectedRows > 0 ? { id, ...campos } : null;
     } catch (error) {
-      throw new Error("Error al actualizar el muestreo de suelo");
+      throw new Error("Error al actualizar el muestreo_botanico");
     }
   }
 
@@ -78,23 +78,23 @@ class MuestreoSuelo {
   async delete(personaId) {
     // Procedemos con la eliminación si no está relacionada
     const [result] = await connection.query(
-      "DELETE FROM muestreo_suelo WHERE id_muestreo_suelo = ?",
+      "DELETE FROM muestreo_detritos_madera WHERE id_muestreo_detritos = ?",
       [personaId]
     );
 
     if (result.affectedRows === 0) {
       return {
         error: true,
-        mensaje: "No se pudo eliminar el muestreo suelo, ocurrio un error inesperado.",
+        mensaje: "No se pudo eliminar el muestreo de detritos de madera, ocurrio un error inesperado.",
       };
     }
 
     return {
       error: false,
-      mensaje: "Muestreo de suelo eliminada exitosamente.",
+      mensaje: "Muestreo detritos de madera eliminada exitosamente.",
     };
   }
 
 }
 
-export default MuestreoSuelo;
+export default MuestreoDetritosMadera;
