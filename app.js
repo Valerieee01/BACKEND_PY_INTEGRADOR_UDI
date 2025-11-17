@@ -19,10 +19,6 @@ import individuoRoutes from "./src/routes/individuoRoutes.js";
 import suelosRoutes from "./src/routes/suelosRoutes.js";
 import integrantesRoutes from "./src/routes/integrantesRoutes.js";
 
-
-
-
-
 dotenv.config();
 
 // Crear la instancia de Express
@@ -56,20 +52,7 @@ app.use("/api/integrantes", integrantesRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", administradorRoutes);
 
-app.get('/rutas', (req, res) => {
-  const rutas = [];
 
-  app._router?.stack.forEach(r => {
-    if (r.route) {
-      rutas.push({
-        metodo: Object.keys(r.route.methods)[0].toUpperCase(),
-        ruta: r.route.path
-      });
-    }
-  });
-
-  res.json(rutas);
-});
 // Puerto para ejecutar el servidor
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
