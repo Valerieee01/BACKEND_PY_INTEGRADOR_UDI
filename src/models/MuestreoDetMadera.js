@@ -31,18 +31,18 @@ class MuestreoDetritosMadera {
     }
 
     // Método para crear una nueva categoría
-  async create(id_subparcela, fecha_muestreo, observaciones) {
+  async create(id_subparcela, tipo_elemento, diametro, longitud, estado_descomposicion, posicion, observaciones) {
     
     try {
       const [result] = await connection.query(
-        "INSERT INTO muestreo_botanico (id_subparcela, fecha_muestreo, observaciones) VALUES (?, ?, ?)",
-        [id_subparcela, fecha_muestreo, observaciones]
+        "INSERT INTO muestreo_botanico (id_subparcela, tipo_elemento, diametro, longitud, estado_descomposicion, posicion, observaciones) VALUES (?, ?, ?)",
+        [id_subparcela, tipo_elemento, diametro, longitud, estado_descomposicion, posicion, observaciones]
       );
       if (result.affectedRows === 0) {
         return null; // Retorna null si no se pudo crear la persona
       }
       // Retorna la nueva persona creada
-      return { id: result.insertId, id_subparcela, fecha_muestreo, observaciones};
+      return { id: result.insertId, id_subparcela, tipo_elemento, diametro, longitud, estado_descomposicion, posicion, observaciones};
 
     } catch (error) {
       console.log(error);

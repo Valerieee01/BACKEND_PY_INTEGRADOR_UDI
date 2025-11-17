@@ -61,10 +61,10 @@ class EmpleadoService {
     }
   }
 
-  static async createEmpleado(id_persona) {
+  static async createEmpleado(id_empleado, id_cargo_empleado) {
     try {
       const empleadoInstance = new Empleado();
-      const empleados = await empleadoInstance.create(id_persona);
+      const empleados = await empleadoInstance.create(id_empleado, id_cargo_empleado);
       // Validamos si no se pudo crear la categoría      
       if (empleados === null) {
         return {

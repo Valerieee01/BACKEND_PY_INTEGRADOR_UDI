@@ -59,10 +59,10 @@ class EquipoService {
     }
   }
 
-  static async createEquipo(numero_equipo, placa, descripcion, id_cliente) {
+  static async createEquipo(nombre_equipo, institucion,estado,observaciones) {
     try {
       const EquipoInstance = new Equipo();
-      const Equipos = await EquipoInstance.create(numero_equipo, placa, descripcion, id_cliente);
+      const Equipos = await EquipoInstance.create(nombre_equipo, institucion,estado,observaciones);
       // Validamos si no se pudo crear la categoría      
       if (Equipos === null) {
         return {

@@ -6,64 +6,64 @@ class AsignacionesService {
   { 
     try {
       const asignacionesInstance = new AsignacionesEquipo();
-      const asignacioness = await asignacionesInstance.getAll();
-      // Validamos si no hay asignacioness      
-      if (asignacioness.length === 0) {
+      const asignaciones = await asignacionesInstance.getAll();
+      // Validamos si no hay asignaciones      
+      if (asignaciones.length === 0) {
         return {
           error: true,
           code: 404,
-          message: "No hay asignacioness registrados",
+          message: "No hay asignaciones registrados",
         };
       }      
-      // Retornamos las asignacioness obtenidas
+      // Retornamos las asignaciones obtenidas
       return {
         error: false,
         code: 200,
-        message: "asignacioness obtenidos correctamente",
-        data: asignacioness,
+        message: "asignaciones obtenidos correctamente",
+        data: asignaciones,
       };
     } catch (error) {      
       return {
         error: true,
         code: 500,
-        message: "Error al obtener las asignacioness",
+        message: "Error al obtener las asignaciones",
       };
     }
   }
 
-  static async getAsinacionesById(id) {
+  static async getAsignacionesById(id) {
     try {
-      const AsinacionesInstance = new AsignacionesEquipo();
-      const Asinaciones = await AsinacionesInstance.getById(id);
-      console.log(Asinaciones);
+      const AsignacionesInstance = new AsignacionesEquipo();
+      const Asignaciones = await AsignacionesInstance.getById(id);
+      console.log(Asignaciones);
       
-      // Validamos si no hay Asinacioness
-      if (Asinaciones.length === 0) {
+      // Validamos si no hay Asignacioness
+      if (Asignaciones.length === 0) {
         return {
           error: true,
           code: 404,
-          message: "Asinacioness no encontrada",
+          message: "Asignacioness no encontrada",
         };
       }
       return {
         error: false,
         code: 200,
-        message: "Asinaciones obtenido correctamente",
-        data: Asinaciones,
+        message: "Asignaciones obtenido correctamente",
+        data: Asignaciones,
       };
     } catch (error) {      
       return {
         error: true,
         code: 500,
-        message: "Error al obtener el Asinaciones",
+        message: "Error al obtener el Asignaciones",
       };
     }
   }
 
-  static async createAsignaciones(id_persona) {
+  static async createAsignaciones(id_equipo, id_conglomerado, fecha_asignacion, fecha_finalizacion, estado, observaciones) {
     try {
       const asignacionesInstance = new AsignacionesEquipo();
-      const asignaciones = await asignacionesInstance.create(id_persona);
+      const asignaciones = await asignacionesInstance.create(id_equipo, id_conglomerado, fecha_asignacion, fecha_finalizacion, estado, observaciones);
       // Validamos si no se pudo crear la categoría      
       if (asignaciones === null) {
         return {
@@ -126,7 +126,7 @@ class AsignacionesService {
     } 
   }
 
-  static async deleteasignaciones(id) { 
+  static async deleteAsignaciones(id) { 
     try {
       const asignacionesInstance = new AsignacionesEquipo();
       // Consultamos el asignaciones por id

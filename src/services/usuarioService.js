@@ -1,4 +1,4 @@
-import Usuario from "../models/Usuario.js"; // Asegúrate de que esta ruta sea correcta
+import Usuario from "../models/Usuario.js"; 
 
 class UsuarioService {
 

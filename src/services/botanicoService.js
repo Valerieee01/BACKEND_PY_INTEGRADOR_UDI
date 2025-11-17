@@ -61,6 +61,34 @@ class BotanicoService {
     }
   }
 
+   static async createMuestreoBotanico(id_subparcela, fecha_muestreo, observaciones) {
+    try {
+      const botanicoInstance = new MuestreoBotanico();
+      const botanico = await botanicoInstance.create(id_subparcela, fecha_muestreo, observaciones);
+      // Validamos si no se pudo crear la categoría      
+      if (botanico === null) {
+        return {
+          error: true,
+          code: 400,
+          message: "Error al crear los botanico",
+        };
+      }   
+      // Retornamos la nueva botanico creada
+      return {
+        error: false,
+        code: 201,
+        message: "botanico creada correctamente",
+        data: botanico,
+      };
+    } catch (error) {
+      return {
+        error: true,
+        code: 500,
+        message: "Error interno al crear la botanico, verifica si la persona existe o si ya es un botanico",
+      };
+    }
+  }
+
    static async updateMuestreoBotanico(id, campos) { 
     try {
       const botanicoInstance = new MuestreoBotanico();

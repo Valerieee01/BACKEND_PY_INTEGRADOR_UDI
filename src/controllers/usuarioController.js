@@ -1,9 +1,11 @@
+
 import { ResponseProvider } from "../providers/ResponseProvider.js"; 
 import UsuarioService from "../services/usuarioService.js";     
 
 class UsuarioController {
 
     // Método para obtener todos los usuarios
+    // Se usa, por ejemplo, para una vista de administración que lista todos los usuarios.
     static getAllUsuarios = async (req, res) => {
         try {
             const response = await UsuarioService.getUsuarios(); // Llama al servicio para obtener todos los usuarios.
@@ -38,6 +40,7 @@ class UsuarioController {
 
 
     // Método para obtener el perfil del usuario AUTENTICADO.
+    // Este es el método clave para la vista "Mi Perfil" en el frontend.
     static getMe = async (req, res) => {
         try {
             const id_usuario = req.user?.id_usuario; // Asegúrate de que este campo exista en el token

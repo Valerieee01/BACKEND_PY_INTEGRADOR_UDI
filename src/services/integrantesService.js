@@ -61,10 +61,10 @@ class IntegranteService {
     }
   }
 
-  static async createIntegranteEquipo() {
+  static async createIntegranteEquipo(id_equipo, id_conglomerado, fecha_asignacion, fecha_finalizacion, estado, observaciones) {
     try {
       const integrantesInstance = new IntegrantesEquipo();
-      const integrantess = await integrantesInstance.create();
+      const integrantess = await integrantesInstance.create(id_equipo, id_conglomerado, fecha_asignacion, fecha_finalizacion, estado, observaciones);
       // Validamos si no se pudo crear la categoría      
       if (integrantess === null) {
         return {

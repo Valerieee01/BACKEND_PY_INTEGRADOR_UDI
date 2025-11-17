@@ -60,10 +60,10 @@ class SueloService {
     }
   }
 
-  static async createMuestreoSuelo(id_persona) {
+  static async createMuestreoSuelo(id_subparcela, profundidad_inicial, profundidad_final, textura, color_munsell, humedad, tipo_muestra, observaciones) {
     try {
       const sueloInstance = new MuestreoSuelo();
-      const suelo = await sueloInstance.create(id_persona);
+      const suelo = await sueloInstance.create(id_subparcela, profundidad_inicial, profundidad_final, textura, color_munsell, humedad, tipo_muestra, observaciones);
       // Validamos si no se pudo crear el muestreo      
       if (suelo === null) {
         return {
