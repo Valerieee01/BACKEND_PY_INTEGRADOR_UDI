@@ -1,5 +1,5 @@
 import { ResponseProvider } from "../providers/ResponseProvider.js";
-import AuthService from "../services/AuthService.js";
+import AuthService from "../services/authService.js";
 
 export const register = async (req, res) => {
   const { nombreCompleto, correo, id_rol, contrasena } = req.body;
@@ -15,6 +15,8 @@ export const register = async (req, res) => {
   } catch (error) {
     // Llamamos el provider para centralizar los mensajes de respuesta
     ResponseProvider.error(res, "Error en el servidor", 500);
+    console.log(error);
+    
   }
 }
 

@@ -1,8 +1,6 @@
 import express from "express";
 
 import { verifyToken } from "../middlewares/auth/index.js";
-import { parcialesConglomerados } from "../middlewares/conglomerado/parcialesConglomerado.js";
-import { camposConglomerados } from "../middlewares/conglomerado/camposConglomerado.js";
 import ConglomeradoController from "../controllers/conglomeradoController.js";
 
 const router = express.Router();
@@ -12,7 +10,7 @@ const router = express.Router();
 router.get("/",verifyToken, ConglomeradoController.getAllConglomerados);
 
 // Obtener una Conglomerado por ID
-router.get("/me",verifyToken, ConglomeradoController.getMe);
+router.get("/me",verifyToken, ConglomeradoController.getConglomeradosById);
 
 export default router;
 

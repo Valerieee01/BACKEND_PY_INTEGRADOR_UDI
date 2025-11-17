@@ -3,7 +3,7 @@ import express from "express";
 import { verifyToken } from "../middlewares/auth/index.js";
 import { parcialesUsuarios } from "../middlewares/usuarios/parcialesUsuarios.js";
 import { camposUsuarios } from "../middlewares/usuarios/camposUsuarios.js";
-import UsuarioController from "../controllers/usuariosController.js";
+import UsuarioController from "../controllers/usuarioController.js";
 
 const router = express.Router();
 // Creamos una instancia del controlador

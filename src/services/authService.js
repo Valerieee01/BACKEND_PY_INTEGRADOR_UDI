@@ -35,6 +35,7 @@ class AuthService {
       // Retornamos la respuesta
       return { error: false, code: 201, message: "Usuario creado" };
     } catch (error) {
+      console.log(error);
       return { error: true, code: 500, message: "Error al crear el usuario" };
     }
   }

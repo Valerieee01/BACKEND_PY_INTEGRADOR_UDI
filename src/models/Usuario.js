@@ -74,6 +74,7 @@ class Usuario {
       }
       return { id_usuario: result.insertId };
     } catch (error) {
+      console.log(error)
       console.error("Error en el modelo (create):", error);
       // Manejo específico para error de duplicado de correo
       if (error.code === 'ER_DUP_ENTRY' && error.message.includes('correo')) { // Verifica código y mensaje
@@ -120,8 +121,9 @@ class Usuario {
             throw new Error("Error al actualizar el usuario en la base de datos.");
         }
     }
+
   // Actualizar el refresh token de un usuario
-  static async updateRefreshToken(id_usuario, refreshToken) {
+   async updateRefreshToken(id_usuario, refreshToken) {
     try {
       await connection.query("UPDATE usuarios SET refresh_token = ? WHERE id_usuario = ?", [
         refreshToken,

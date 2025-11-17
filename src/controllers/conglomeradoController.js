@@ -1,5 +1,5 @@
 import { ResponseProvider } from "../providers/ResponseProvider.js";
-import conglomeradoService from "../services/conglomeradosService.js";
+import ConglomeradoService from "../services/conglomeradoService.js";
 
 class ConglomeradosController {
 
@@ -7,7 +7,7 @@ class ConglomeradosController {
   static getAllConglomerados = async (req, res) => {    
     try {
       // Llamamos al servicio para obtener las Conglomerados
-      const response = await Conglomeradoservice.getConglomerados();   
+      const response = await ConglomeradoService.getConglomerados();   
       // Validamos si no hay Conglomerados
       if (response.error) {        
         // Llamamos el conglomerado para centralizar los mensajes de respuesta
@@ -36,7 +36,7 @@ class ConglomeradosController {
     const { id } = req.params;
     try {
       // Llamamos al servicio para obtener la categoría por su ID
-      const response = await Conglomeradoservice.getConglomeradosById(id);
+      const response = await ConglomeradoService.getConglomeradosById(id);
       if (response.error) {
         // Llamamos el conglomerado para centralizar los mensajes de respuesta
         return ResponseProvider.error(
