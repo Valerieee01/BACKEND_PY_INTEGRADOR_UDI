@@ -47,6 +47,8 @@ export const login = async (req, res) => {
   } catch (error) {
     // Llamamos el provider para centralizar los mensajes de respuesta
     ResponseProvider.error(res, "Error en el servidor", 500);
+    console.log(error);
+    
   }
 };
 
