@@ -1,7 +1,7 @@
 import { ResponseProvider } from "../../providers/ResponseProvider.js";
 import { campos } from "./campos.js";
 
-export function parciales(req, res, next) {
+export function parcialesAsignaciones(req, res, next) {
   const errors = [];
   // Capturamos los campos del body de la petición
   const bodyKeys = Object.keys(req.body);

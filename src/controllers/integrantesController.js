@@ -146,4 +146,4 @@ class IntegranteController {
   };
 
 }
-export default integranteController;
+export default IntegranteController;

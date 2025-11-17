@@ -32,7 +32,7 @@ class BotanicoController {
   };
 
   // Obtener una botanicos por su ID
-  static getBotanicosById = async (req, res) => {
+  static getAllBotanicosById = async (req, res) => {
     const { id } = req.params;
     try {
       // Llamamos al servicio para obtener la botanicos por su ID

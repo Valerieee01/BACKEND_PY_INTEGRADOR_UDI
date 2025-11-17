@@ -32,7 +32,7 @@ class AsignacionesController {
   };
 
   // Obtener una asignaciones por su ID
-  static getasignacionesById = async (req, res) => {
+  static getAsignacionesById = async (req, res) => {
     const { id } = req.params;
     try {
       // Llamamos al servicio para obtener la asignaciones por su ID
