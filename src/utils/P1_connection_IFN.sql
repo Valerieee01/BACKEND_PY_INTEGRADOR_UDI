@@ -480,6 +480,7 @@ VALUES
 (6,19,3,'2024-01-25',NULL,'Auxiliar'),
 (6,20,4,'2024-01-25',NULL,'Chofer');
 
+select * from integrantes_equipo;
 -- =====================================================
 -- TABLA: asignaciones_equipos
 -- =====================================================
@@ -506,4 +507,489 @@ VALUES
 (13,19,'2024-09-01','2024-09-10','pendiente','Sin iniciar'),
 (14,20,'2024-09-11','2024-09-20','pendiente','Programado');
 
+SELECT * FROM Equipos;
+ SELECT nombre_equipo, institucion, estado, observaciones, fecha_creacion FROM Equipos  WHERE id_equipo = 4;
 
+SELECT sp.numero_subparcela, mb.fecha_muestreo, mb.observaciones FROM muestreo_botanico mb
+JOIN subparcela sp ON sp.id_subparcela = mb.id_subparcela;
+               
+               
+SELECT sp.numero_subparcela, mb.fecha_muestreo, mb.observaciones FROM muestreo_botanico mb
+JOIN subparcela sp ON sp.id_subparcela = mb.id_subparcela
+WHERE mb.id_muestreo_botanico = 4;
+
+SELECT sp.numero_subparcela, ms.profundidad_inicial, ms.profundidad_final,
+ms.textura, ms.color_munsell, ms.humedad, ms.tipo_muestra, ms.observaciones FROM muestreo_suelo ms
+JOIN subparcela sp ON sp.id_subparcela = ms.id_subparcela;
+
+SELECT sp.numero_subparcela, dm.tipo_elemento, dm.diametro, dm.longitud, 
+ dm.estado_descomposicion, dm.posicion, dm.observaciones FROM muestreo_detritos_madera dm
+ JOIN subparcela sp ON sp.id_subparcela = dm.id_subparcela;
+ 
+ select * from usuarios;
+ 
+ 
+-- PROCEDIMIENTOS
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_individuo (
+	IN p_id_muestreo_botanico INT,
+    IN p_numero INT,
+    IN p_especie VARCHAR(100),
+    IN p_dap DECIMAL(5,2),
+    IN p_altura_total DECIMAL(5,2),
+    IN p_azimut DECIMAL(5,2),
+    IN p_distancia DECIMAL(5,2),
+    IN p_estado VARCHAR(50),
+    IN p_categoria_dap VARCHAR(50),
+    IN p_observaciones TEXT
+)
+BEGIN
+	INSERT INTO individuo (
+		id_muestreo_botanico, numero, especie, dap, altura_total, 
+        azimut, distancia, estado, categoria_dap, observaciones
+    )VALUES(
+		p_id_muestreo_botanico, p_numero, p_especie, p_dap, p_altura_total,
+        p_azimut, p_distancia, p_estado, p_categoria_dap, p_observaciones
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_muestreo_botanico (
+    IN p_id_subparcela INT,
+    IN p_fecha_muestreo DATE,
+    IN p_observaciones TEXT
+)
+BEGIN
+    INSERT INTO muestreo_botanico (
+        id_subparcela,
+        fecha_muestreo,
+        observaciones
+    ) VALUES (
+        p_id_subparcela,
+        p_fecha_muestreo,
+        p_observaciones
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_muestreo_suelo (
+    IN p_id_subparcela INT,
+    IN p_profundidad_inicial DECIMAL(5,2),
+    IN p_profundidad_final DECIMAL(5,2),
+    IN p_textura VARCHAR(50),
+    IN p_color_munsell VARCHAR(50),
+    IN p_humedad VARCHAR(50),
+    IN p_tipo_muestra VARCHAR(50),
+    IN p_observaciones TEXT
+)
+BEGIN
+    INSERT INTO muestreo_suelo (
+        id_subparcela, profundidad_inicial, profundidad_final, textura,
+        color_munsell, humedad, tipo_muestra, observaciones
+    ) VALUES (
+        p_id_subparcela, p_profundidad_inicial, p_profundidad_final, p_textura,
+        p_color_munsell, p_humedad, p_tipo_muestra, p_observaciones
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_muestreo_detritos (
+    IN p_id_subparcela INT,
+    IN p_tipo_elemento VARCHAR(50),
+    IN p_diametro DECIMAL(5,2),
+    IN p_longitud DECIMAL(5,2),
+    IN p_estado_descomposicion VARCHAR(20),
+    IN p_posicion VARCHAR(30),
+    IN p_observaciones TEXT
+)
+BEGIN
+    INSERT INTO muestreo_detritos_madera (
+        id_subparcela, tipo_elemento, diametro, longitud,
+        estado_descomposicion, posicion, observaciones
+    ) VALUES (
+        p_id_subparcela, p_tipo_elemento, p_diametro, p_longitud,
+        p_estado_descomposicion, p_posicion, p_observaciones
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_integrante_equipo (
+    IN p_id_equipo INT,
+    IN p_id_empleado INT,
+    IN p_id_cargo INT,
+    IN p_fecha_inicio DATE,
+    IN p_fecha_fin DATE,
+    IN p_observaciones TEXT
+)
+BEGIN
+    INSERT INTO integrantes_equipo (
+        id_equipo, id_empleado, id_cargo,
+        fecha_inicio, fecha_fin, observaciones
+    ) VALUES (
+        p_id_equipo, p_id_empleado, p_id_cargo,
+        p_fecha_inicio, p_fecha_fin, p_observaciones
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_asignacion_equipo (
+    IN p_id_equipo INT,
+    IN p_id_conglomerado INT,
+    IN p_fecha_asignacion DATE,
+    IN p_fecha_finalizacion DATE,
+    IN p_estado ENUM('pendiente','en_progreso','completado'),
+    IN p_observaciones TEXT
+)
+BEGIN
+    INSERT INTO asignaciones_equipos (
+        id_equipo, id_conglomerado, fecha_asignacion,
+        fecha_finalizacion, estado, observaciones
+    ) VALUES (
+        p_id_equipo, p_id_conglomerado, p_fecha_asignacion,
+		p_fecha_finalizacion, p_estado, p_observaciones
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_equipo (
+    IN p_nombre_equipo VARCHAR(100),
+    IN p_institucion VARCHAR(100),
+    IN p_estado ENUM('activo','inactivo'),
+    IN p_observaciones TEXT
+)
+BEGIN
+    INSERT INTO equipos (
+        nombre_equipo, institucion, estado, observaciones
+    ) VALUES (
+        p_nombre_equipo, p_institucion, p_estado, p_observaciones
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_usuario (
+    IN p_nombreCompleto VARCHAR(100),
+    IN p_correo VARCHAR(150),
+    IN p_contrasena VARCHAR(255),
+    IN p_id_rol INT,
+    IN p_estado VARCHAR(10),
+    IN p_refresh_token TEXT
+)
+BEGIN
+    INSERT INTO usuarios (
+        nombreCompleto, correo, contrasena,
+        id_rol, estado, refresh_token
+    ) VALUES (
+        p_nombreCompleto, p_correo, p_contrasena,
+        p_id_rol, p_estado, p_refresh_token
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_persona (
+    IN p_nombre_completo_razon_social VARCHAR(250),
+    IN p_id_tipo_identificacion INT,
+    IN p_numero_identificacion VARCHAR(20),
+    IN p_correo VARCHAR(150),
+    IN p_telefono VARCHAR(20),
+    IN p_direccion VARCHAR(255),
+    IN p_id_ciudad INT,
+    IN p_estado VARCHAR(10)
+)
+BEGIN
+    INSERT INTO personas (
+        nombre_completo_razon_social, id_tipo_identificacion, numero_identificacion,
+        correo, telefono, direccion, id_ciudad, estado
+    ) VALUES (
+        p_nombre_completo_razon_social, p_id_tipo_identificacion, p_numero_identificacion,
+        p_correo, p_telefono, p_direccion, p_id_ciudad, p_estado
+    );
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE inc_empleado (
+    IN p_id_empleado INT,
+    IN p_id_cargo_empleado INT
+)
+BEGIN
+    INSERT INTO empleados (
+        id_empleado, id_cargo_empleado
+    ) VALUES (
+        p_id_empleado, p_id_cargo_empleado
+    );
+END $$
+
+DELIMITER ;
+
+-- -------------------------------------------------------------
+-- FUNCIONES
+
+DELIMITER $$
+
+CREATE FUNCTION fn_existe_usuario(p_correo VARCHAR(150))
+RETURNS TINYINT
+DETERMINISTIC
+BEGIN
+    DECLARE v_existe TINYINT DEFAULT 0;
+
+    SELECT COUNT(*) INTO v_existe
+    FROM usuarios
+    WHERE correo = p_correo;
+
+    RETURN v_existe;
+END $$
+
+DELIMITER ;
+-- -
+
+DELIMITER $$
+
+CREATE FUNCTION fn_total_individuos_subparcela(p_id_subparcela INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE v_total INT DEFAULT 0;
+
+    SELECT COUNT(*)
+    INTO v_total
+    FROM individuo i
+    INNER JOIN muestreo_botanico mb ON i.id_muestreo_botanico = mb.id_muestreo_botanico
+    WHERE mb.id_subparcela = p_id_subparcela;
+
+    RETURN v_total;
+END $$
+
+DELIMITER ;
+
+
+-- DISPARADORES
+
+CREATE TABLE auditoria (
+    id_auditoria INT AUTO_INCREMENT PRIMARY KEY,
+    tabla VARCHAR(50),
+    accion VARCHAR(10),
+    id_registro INT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    descripcion TEXT
+);
+-- ----------usuarios--------------
+CREATE TRIGGER trg_usuarios_ai
+AFTER INSERT ON usuarios
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('usuarios', 'INSERT', NEW.id_usuario,
+        CONCAT('Usuario insertado: ', NEW.correo));
+
+CREATE TRIGGER trg_usuarios_au
+AFTER UPDATE ON usuarios
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('usuarios', 'UPDATE', NEW.id_usuario,
+        CONCAT('Usuario actualizado: ', NEW.correo));
+
+
+CREATE TRIGGER trg_usuarios_ad
+AFTER DELETE ON usuarios
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('usuarios', 'DELETE', OLD.id_usuario,
+        CONCAT('Usuario eliminado: ', OLD.correo));
+
+
+-- ----------persona-------------------
+CREATE TRIGGER trg_personas_ai
+AFTER INSERT ON personas
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('personas', 'INSERT', NEW.id_persona,
+        CONCAT('Persona insertada: ', NEW.nombre_completo_razon_social));
+
+CREATE TRIGGER trg_personas_au
+AFTER UPDATE ON personas
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('personas', 'UPDATE', NEW.id_persona,
+        CONCAT('Persona actualizada: ', NEW.nombre_completo_razon_social));
+
+CREATE TRIGGER trg_personas_ad
+AFTER DELETE ON personas
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('personas', 'DELETE', OLD.id_persona,
+        CONCAT('Persona eliminada: ', OLD.nombre_completo_razon_social));
+-- -----------------------------------------------------
+
+-- ---------empleados------------------
+
+CREATE TRIGGER trg_empleados_ai
+AFTER INSERT ON empleados
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('empleados', 'INSERT', NEW.id_empleado,
+        CONCAT('Empleado creado con cargo: ', NEW.id_cargo_empleado));
+
+CREATE TRIGGER trg_empleados_au
+AFTER UPDATE ON empleados
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('empleados', 'UPDATE', NEW.id_empleado,
+        CONCAT('Empleado actualizado: nuevo cargo ', NEW.id_cargo_empleado));
+
+CREATE TRIGGER trg_empleados_ad
+AFTER DELETE ON empleados
+FOR EACH ROW
+INSERT INTO auditoria (tabla, accion, id_registro, descripcion)
+VALUES ('empleados', 'DELETE', OLD.id_empleado,
+        'Empleado eliminado');
+
+
+-- -----------equipos--------------------
+
+CREATE TRIGGER trg_equipo_ai AFTER INSERT ON equipos
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'equipos', 'INSERT', NEW.id_equipo, NOW(),
+ CONCAT('Equipo creado: ', NEW.nombre_equipo));
+
+CREATE TRIGGER trg_equipo_au AFTER UPDATE ON equipos
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'equipos', 'UPDATE', NEW.id_equipo, NOW(),
+ CONCAT('Equipo actualizado: ', NEW.nombre_equipo));
+
+CREATE TRIGGER trg_equipo_ad AFTER DELETE ON equipos
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'equipos', 'DELETE', OLD.id_equipo, NOW(),
+ CONCAT('Equipo eliminado: ', OLD.nombre_equipo));
+-----------------------------------------------
+
+-- -------integrantes equipo-------------------
+
+CREATE TRIGGER trg_integrante_ai AFTER INSERT ON integrantes_equipo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'integrantes_equipo', 'INSERT', NEW.id_integrante, NOW(),
+ 'Integrante agregado');
+
+CREATE TRIGGER trg_integrante_au AFTER UPDATE ON integrantes_equipo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'integrantes_equipo', 'UPDATE', NEW.id_integrante, NOW(),
+ 'Integrante actualizado');
+
+CREATE TRIGGER trg_integrante_ad AFTER DELETE ON integrantes_equipo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'integrantes_equipo', 'DELETE', OLD.id_integrante, NOW(),
+ 'Integrante eliminado');
+
+
+-- -------asignaciones equipos----------------------
+
+CREATE TRIGGER trg_asignacion_ai AFTER INSERT ON asignaciones_equipos
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'asignaciones_equipos', 'INSERT', NEW.id_asignacion, NOW(),
+ 'Nueva asignación de equipo');
+
+CREATE TRIGGER trg_asignacion_au AFTER UPDATE ON asignaciones_equipos
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'asignaciones_equipos', 'UPDATE', NEW.id_asignacion, NOW(),
+ 'Asignación actualizada');
+
+CREATE TRIGGER trg_asignacion_ad AFTER DELETE ON asignaciones_equipos
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'asignaciones_equipos', 'DELETE', OLD.id_asignacion, NOW(),
+ 'Asignación eliminada');
+
+
+-- ----------individuo-------------------
+CREATE TRIGGER trg_individuo_ai AFTER INSERT ON individuo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'individuo', 'INSERT', NEW.id_individuo, NOW(),
+ CONCAT('Individuo insertado: ', NEW.especie));
+
+CREATE TRIGGER trg_individuo_au AFTER UPDATE ON individuo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'individuo', 'UPDATE', NEW.id_individuo, NOW(),
+ CONCAT('Individuo actualizado: ', NEW.especie));
+
+CREATE TRIGGER trg_individuo_ad AFTER DELETE ON individuo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'individuo', 'DELETE', OLD.id_individuo, NOW(),
+ CONCAT('Individuo eliminado: ', OLD.especie));
+
+
+
+-- ----------muestreo suelo-------------------
+CREATE TRIGGER trg_suelo_ai AFTER INSERT ON muestreo_suelo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'muestreo_suelo', 'INSERT', NEW.id_muestreo_suelo, NOW(),
+ 'Nueva muestra de suelo');
+
+CREATE TRIGGER trg_suelo_au AFTER UPDATE ON muestreo_suelo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'muestreo_suelo', 'UPDATE', NEW.id_muestreo_suelo, NOW(),
+ 'Muestra de suelo actualizada');
+
+CREATE TRIGGER trg_suelo_ad AFTER DELETE ON muestreo_suelo
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'muestreo_suelo', 'DELETE', OLD.id_muestreo_suelo, NOW(),
+ 'Muestra de suelo eliminada');
+
+
+
+-- ----------muestreo detritos madera-------------------
+CREATE TRIGGER trg_detritos_ai AFTER INSERT ON muestreo_detritos_madera
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'muestreo_detritos_madera', 'INSERT', NEW.id_muestreo_detritos, NOW(),
+ 'Nuevo muestreo de detritos');
+
+CREATE TRIGGER trg_detritos_au AFTER UPDATE ON muestreo_detritos_madera
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'muestreo_detritos_madera', 'UPDATE', NEW.id_muestreo_detritos, NOW(),
+ 'Muestreo de detritos actualizado');
+
+CREATE TRIGGER trg_detritos_ad AFTER DELETE ON muestreo_detritos_madera
+FOR EACH ROW INSERT INTO auditoria VALUES
+(NULL, 'muestreo_detritos_madera', 'DELETE', OLD.id_muestreo_detritos, NOW(),
+ 'Muestreo de detritos eliminado');
+
+
+-- Para evitar DAP, altura, distancia o azimut negativos
+
+DELIMITER $$
+
+CREATE TRIGGER trg_individuo_validaciones
+BEFORE INSERT ON individuo
+FOR EACH ROW
+BEGIN
+    IF NEW.dap < 0 THEN SET NEW.dap = NULL; END IF;
+    IF NEW.altura_total < 0 THEN SET NEW.altura_total = NULL; END IF;
+    IF NEW.azimut < 0 OR NEW.azimut > 360 THEN SET NEW.azimut = NULL; END IF;
+    IF NEW.distancia < 0 THEN SET NEW.distancia = NULL; END IF;
+END $$
+
+DELIMITER ;
